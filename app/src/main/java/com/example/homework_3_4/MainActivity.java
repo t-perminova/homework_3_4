@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -19,9 +20,9 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
     private ImageView playView; // создание объекта картинки "Play"
     private ImageView stopView; // создание объекта картинки "Stop"
+    private ImageView imageViewPicture; // создание объекта картинки для обложки
     private MediaPlayer mediaPlayer; // создание медиа-плеера
     private SeekBar  seekBar; // создание полосы прокрутки
-
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
         playView = findViewById(R.id.imageView);
         stopView = findViewById(R.id.imageViewStop);
+        imageViewPicture = findViewById(R.id.imageViewPicture);
         seekBar = findViewById(R.id.seekBar);
         mediaPlayer = new MediaPlayer();
 
@@ -67,6 +69,24 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             new SeekBarThread(mediaPlayer, seekBar).start();
         });
 
+        imageViewPicture.setOnClickListener(view -> {
+            mediaPlayer.setLooping(true);
+            mediaPlayer.start();
+            new SeekBarThread(mediaPlayer, seekBar).start();
+        });
+
+        imageViewPicture.setOnClickListener(view -> {
+            mediaPlayer.pause();
+            seekBar.setOnSeekBarChangeListener(this);
+        });
+
+        imageViewPicture.setOnClickListener(view -> {
+            int length = mediaPlayer.getCurrentPosition();
+            mediaPlayer.seekTo(length);
+            mediaPlayer.start();
+            new SeekBarThread(mediaPlayer, seekBar).start();
+        });
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             // метод при перетаскивании ползунка по шкале
             @Override
@@ -84,6 +104,10 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
             }
         });
+    }
+
+    private void songName() {
+
     }
 
     @Override
